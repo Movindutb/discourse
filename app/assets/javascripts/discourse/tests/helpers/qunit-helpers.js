@@ -68,6 +68,9 @@ import {
   clearBlockDecorateCallbacks,
   clearTagDecorateCallbacks,
 } from "discourse/lib/to-markdown";
+import { resetNotificationsProcessors as resetUserMenuNotificationsProcessors } from "discourse/components/user-menu/notifications-list";
+import { resetTopicTitleDecorators as resetUserMenuTopicTitleDecorators } from "discourse/components/user-menu/notification-item";
+import { resetCustomComponents as resetUserMenuCustomComponents } from "discourse/models/notification";
 
 const LEGACY_ENV = !setupApplicationTest;
 
@@ -194,6 +197,9 @@ function testCleanup(container, app) {
   resetTopicsSectionLinks();
   clearTagDecorateCallbacks();
   clearBlockDecorateCallbacks();
+  resetUserMenuTopicTitleDecorators();
+  resetUserMenuNotificationsProcessors();
+  resetUserMenuCustomComponents();
 }
 
 export function discourseModule(name, options) {
