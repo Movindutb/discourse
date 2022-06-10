@@ -658,7 +658,7 @@ class User < ActiveRecord::Base
       payload = {
         description: status.description,
         emoji: status.emoji,
-        endsAt: status.ends_at
+        endsAt: status.ends_at&.iso8601
       }
     else
       payload = nil
