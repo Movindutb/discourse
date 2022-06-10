@@ -24,8 +24,9 @@ acceptance("User Status", function (needs) {
   const userStatus = "off to dentist";
   const userStatusEmoji = "tooth";
   const userId = 1;
+  const userTimezone = "Africa/Casablanca";
 
-  needs.user({ id: userId });
+  needs.user({ id: userId, timezone: userTimezone });
 
   needs.pretender((server, helper) => {
     server.put("/user-status.json", () => {
@@ -102,7 +103,11 @@ acceptance("User Status", function (needs) {
     this.siteSettings.enable_user_status = true;
 
     updateCurrentUser({
-      status: { description: userStatus, emoji: userStatusEmoji },
+      status: {
+        description: userStatus,
+        emoji: userStatusEmoji,
+        endsAt: moment.tz("2100-01-01T09:35:00", userTimezone),
+      },
     });
 
     await visit("/");
@@ -118,6 +123,12 @@ acceptance("User Status", function (needs) {
       userStatus,
       "status description is shown"
     );
+    assert.equal(
+      query(".date-picker").value,
+      "2100-01-01",
+      "endsAt date is shown"
+    );
+    assert.equal(query(".time-input").value, "09:35", "endsAt time is shown");
   });
 
   test("emoji picking", async function (assert) {
