@@ -60,17 +60,18 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
       translatedLabel: status.description,
     };
 
-    if (!status.ends_at) {
-      menuButton.contents = this._statusTimerLabel(status.ends_at);
+    if (status.endsAt) {
+      menuButton.contents = this._statusTimerLabel(status.endsAt);
     }
 
     return this.attach("flat-button", menuButton);
   },
 
-  _statusTimerLabel() {
+  _statusTimerLabel(endsAt) {
     const icon = iconHTML("clock");
+    const remaining = moment.duration(endsAt.diff(moment()));
     return new RawHtml({
-      html: `<span class="user-status-timer">${icon}60m</span>`,
+      html: `<span class="user-status-timer">${icon} ${remaining}</span>`,
     });
   },
 });
