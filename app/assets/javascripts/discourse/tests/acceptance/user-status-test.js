@@ -269,7 +269,7 @@ acceptance("User Status", function (needs) {
     );
   });
 
-  test("shows actual status on the modal after canceling the modal", async function (assert) {
+  test("shows actual status on the modal after canceling the modal and opening it again", async function (assert) {
     this.siteSettings.enable_user_status = true;
 
     updateCurrentUser({
