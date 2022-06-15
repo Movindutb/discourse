@@ -122,7 +122,7 @@ export default {
           status = {
             emoji: data.emoji,
             description: data.description,
-            endsAt: moment.utc(data.endsAt).tz(user.timezone),
+            ends_at: moment.utc(data.ends_at).tz(user.timezone),
           };
         }
 

@@ -28,10 +28,10 @@ export default Controller.extend(ModalFunctionality, {
     this.setProperties({
       emoji: status?.emoji,
       description: status?.description,
-      endsAt: status?.endsAt,
+      endsAt: status?.ends_at,
       showDeleteButton: !!status,
       timeShortcuts: this._buildTimeShortcuts(),
-      prefilledDateTime: status?.endsAt?.toISOString(),
+      prefilledDateTime: status?.ends_at?.toISOString(),
     });
 
     this.set("_itsatrap", new ItsATrap());
@@ -78,7 +78,7 @@ export default Controller.extend(ModalFunctionality, {
     const status = {
       description: this.description,
       emoji: this.emoji,
-      endsAt: this.endsAt,
+      ends_at: this.endsAt,
     };
     this.userStatusService
       .set(status)

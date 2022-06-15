@@ -60,8 +60,8 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
       translatedLabel: status.description,
     };
 
-    if (status.endsAt) {
-      menuButton.contents = this._statusTimerLabel(status.endsAt);
+    if (status.ends_at) {
+      menuButton.contents = this._statusTimerLabel(status.ends_at);
     }
 
     return this.attach("flat-button", menuButton);
