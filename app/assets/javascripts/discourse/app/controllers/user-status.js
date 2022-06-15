@@ -31,7 +31,7 @@ export default Controller.extend(ModalFunctionality, {
       endsAt: status?.ends_at,
       showDeleteButton: !!status,
       timeShortcuts: this._buildTimeShortcuts(),
-      prefilledDateTime: status?.ends_at?.toISOString(),
+      prefilledDateTime: status?.ends_at,
     });
 
     this.set("_itsatrap", new ItsATrap());
@@ -78,7 +78,7 @@ export default Controller.extend(ModalFunctionality, {
     const status = {
       description: this.description,
       emoji: this.emoji,
-      ends_at: this.endsAt,
+      ends_at: this.endsAt?.toISOString(),
     };
     this.userStatusService
       .set(status)

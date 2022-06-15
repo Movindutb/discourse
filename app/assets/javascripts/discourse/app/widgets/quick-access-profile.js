@@ -61,7 +61,7 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
     };
 
     if (status.ends_at) {
-      menuButton.contents = this._statusTimerLabel(status.ends_at);
+      menuButton.contents = this._statusTimerLabel(moment.utc(status.ends_at));
     }
 
     return this.attach("flat-button", menuButton);
