@@ -117,7 +117,16 @@ export default {
       });
 
       bus.subscribe(`/user-status/${user.id}`, (data) => {
-        user.set("status", data);
+        let status = null;
+        if (data) {
+          status = {
+            emoji: data.emoji,
+            description: data.description,
+            endsAt: moment.utc(data.endsAt).tz(user.timezone),
+          };
+        }
+
+        user.set("status", status);
         appEvents.trigger("user-status:changed");
       });
 

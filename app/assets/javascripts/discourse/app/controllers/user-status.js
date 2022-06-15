@@ -19,6 +19,7 @@ export default Controller.extend(ModalFunctionality, {
   endsAt: null,
 
   showDeleteButton: false,
+  prefilledDateTime: null,
   timeShortcuts: null,
   _itsatrap: null,
 
@@ -30,6 +31,7 @@ export default Controller.extend(ModalFunctionality, {
       endsAt: status?.endsAt,
       showDeleteButton: !!status,
       timeShortcuts: this._buildTimeShortcuts(),
+      prefilledDateTime: status?.endsAt?.toISOString(),
     });
 
     this.set("_itsatrap", new ItsATrap());
