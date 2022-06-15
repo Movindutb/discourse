@@ -106,7 +106,7 @@ acceptance("User Status", function (needs) {
       status: {
         description: userStatus,
         emoji: userStatusEmoji,
-        endsAt: moment.tz("2100-01-01T09:35:00", userTimezone),
+        ends_at: moment.tz("2100-01-01T09:35:00", userTimezone),
       },
     });
 
@@ -126,9 +126,9 @@ acceptance("User Status", function (needs) {
     assert.equal(
       query(".date-picker").value,
       "2100-01-01",
-      "endsAt date is shown"
+      "ends_at date is shown"
     );
-    assert.equal(query(".time-input").value, "09:35", "endsAt time is shown");
+    assert.equal(query(".time-input").value, "09:35", "ends_at time is shown");
   });
 
   test("emoji picking", async function (assert) {
