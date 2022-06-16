@@ -31,6 +31,7 @@ import { longDate } from "discourse/lib/formatter";
 import { url } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
+import { cancel, later } from "@ember/runloop";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -114,6 +115,16 @@ const User = RestModel.extend({
 
   redirected_to_top: {
     reason: null,
+  },
+
+  _autoClearStatusCallback: null,
+
+  init() {
+    this._super(...arguments);
+    this.addObserver("status", this, "_statusDidChange");
+    if (this.status && this.status.ends_at) {
+      this._scheduleStatusAutoClearing(this.status.ends_at);
+    }
   },
 
   @discourseComputed("can_be_deleted", "post_count")
@@ -1022,6 +1033,39 @@ const User = RestModel.extend({
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
   },
+
+  _statusDidChange(sender, key) {
+    const status = this.get(key);
+    if (status && status.ends_at) {
+      this._scheduleStatusAutoClearing(status.ends_at);
+    } else {
+      this._unscheduleStatusAutoClearing();
+    }
+  },
+
+  _scheduleStatusAutoClearing(endsAt) {
+    const utcNow = moment.utc();
+    const remaining = moment.utc(endsAt).diff(utcNow, "milliseconds");
+    this._autoClearStatusCallback = later(
+      this,
+      () => this._autoClearStatus(),
+      remaining
+    );
+  },
+
+  _unscheduleStatusAutoClearing() {
+    if (cancel(this._autoClearStatusCallback)) {
+      this._autoClearStatusCallback = null;
+    }
+  },
+
+  _autoClearStatus() {
+    this.set("status", null);
+    if (this.isCurrent) {
+      this.appEvents.trigger("user-status:changed");
+    }
+    this._unscheduleStatusAutoClearing();
+  },
 });
 
 User.reopenClass(Singleton, {
@@ -1035,6 +1079,8 @@ User.reopenClass(Singleton, {
   createCurrent() {
     const userJson = PreloadStore.get("currentUser");
     if (userJson) {
+      userJson.isCurrent = true;
+
       if (userJson.primary_group_id) {
         const primaryGroup = userJson.groups.find(
           (group) => group.id === userJson.primary_group_id
