@@ -4,8 +4,7 @@ import QuickAccessItem from "discourse/widgets/quick-access-item";
 import QuickAccessPanel from "discourse/widgets/quick-access-panel";
 import { createWidgetFrom } from "discourse/widgets/widget";
 import showModal from "discourse/lib/show-modal";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import RawHtml from "discourse/widgets/raw-html";
+import { dateNode } from "discourse/helpers/node";
 
 const _extraItems = [];
 
@@ -61,18 +60,10 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
     };
 
     if (status.ends_at) {
-      menuButton.contents = this._statusTimerLabel(moment.utc(status.ends_at));
+      menuButton.contents = dateNode(status.ends_at);
     }
 
     return this.attach("flat-button", menuButton);
-  },
-
-  _statusTimerLabel(endsAt) {
-    const icon = iconHTML("clock");
-    const remaining = moment.duration(endsAt.diff(moment()));
-    return new RawHtml({
-      html: `<span class="user-status-timer">${icon} ${remaining}</span>`,
-    });
   },
 });
 
